@@ -146,3 +146,8 @@ textarea {
     color: #7f8c8d;
     margin-bottom: 1rem;
 }
+
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+}

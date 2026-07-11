@@ -1,3 +1,11 @@
+const usernameInput = document.querySelector('#username');
+const firstName = document.querySelector('#first_name');
+const lastName = document.querySelector('#last_name');
+const email = document.querySelector('#email');
+//Password?
+const registerBtn = document.querySelector('#registerBtn')
+const loginBtn = document.querySelector('#loginBtn')
+
 // Bejelentkezés API hívás
 async function loginUser(username, password) {
     const formData = new FormData();
