@@ -1,31 +1,50 @@
-const usernameInput = document.querySelector('#username');
-const firstName = document.querySelector('#first_name');
-const lastName = document.querySelector('#last_name');
-const email = document.querySelector('#email');
-//Password?
-const registerBtn = document.querySelector('#registerBtn')
-const loginBtn = document.querySelector('#loginBtn')
+document.addEventListener('DOMContentLoaded', () => {
 
-// Bejelentkezés API hívás
-async function loginUser(username, password) {
-    const formData = new FormData();
-    formData.append('username', username);
-    formData.append('password', password);
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(loginForm);
 
-    try {
-        const response = await fetch('/api/login', {
-            method: 'POST',
-            body: formData
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert("Sikeres regisztráció! Most már beléphetsz.");
+                    window.location.href = '/frontend/login.html';
+                } else {
+                    const result = await response.json();
+                    alert("Hiba történt: " + (result.error || "Ismeretlen hiba a szerveren!"));
+                }
+            } catch (error) {
+                console.error("Hálózati hiba:", error);
+            }
         });
-        
-        const result = await response.json();
-        
-        if (response.ok) {
-            console.log("Sikeres belépés!", result);
-        } else {
-            console.error("Hiba:", result.error);
-        }
-    } catch (error) {
-        console.error("Hálózati hiba:", error);
     }
-}
+
+    const registerForm = document.getElementById('register-form');
+    if (registerForm) {
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(registerForm);
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    alert("Sikeres regisztráció! Most már beléphetsz.");
+                    window.location.href = '/frontend/login.html';
+                }
+            } catch (error) {
+                console.error("Hálózati hiba:", error);
+            }
+        });
+    }
+});
