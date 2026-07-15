@@ -37,13 +37,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     method: 'POST',
                     body: formData
                 });
-                
+
                 if (response.ok) {
                     alert("Sikeres regisztráció! Most már beléphetsz.");
                     window.location.href = '/view/login.html';
+                } else {
+                    const responseText = await response.text();
+                    try {
+                        const errorData = JSON.parse(responseText);
+                        alert(errorData.error || "Hiba történt a regisztráció során.");
+                    } catch (parseError) {
+                        console.error(responseText);
+                        alert("A szerver hibát dobott. Kérlek, nézd meg a Konzol (F12) üzeneteit!");
+                    }
                 }
             } catch (error) {
                 console.error("Hálózati hiba:", error);
+                alert("Hálózati hiba történt. Kérlek, ellenőrizd az internetkapcsolatod!");
             }
         });
     }
