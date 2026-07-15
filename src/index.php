@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 session_start();
 require 'db.php';
 
@@ -51,10 +53,10 @@ if (strpos($path, '/api/') === 0) {
 
 if ($path === '/' || $path === '/index.php') {
     if (!isset($_SESSION['user_id'])) {
-        header('Location: /frontend/login.html');
+        header('Location: /view/login.html');
         exit;
     }
-    include 'frontend/index.html';
+    include 'view/index.html';
     exit;
 }
 
