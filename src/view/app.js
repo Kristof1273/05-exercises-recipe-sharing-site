@@ -57,4 +57,46 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+const recipeForm = document.getElementById('recipe-form');
+if (recipeForm) {
+    recipeForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const title = document.getElementById('title').value.trim();
+        const instructions = document.getElementById('instructions').value.trim();
+
+        if (!title || !instructions) {
+            alert("Error: Both the Recipe Title and Instructions fields are required!");
+            return;
+        }
+
+        const formData = new FormData(recipeForm);
+
+        try {
+            const response = await fetch('/api/recipes', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (response.ok) {
+                alert("Recipe saved successfully!");
+                window.location.href = '/'; 
+            } else {
+                const responseText = await response.text();
+                try {
+                    const errorData = JSON.parse(responseText);
+                    alert(errorData.error || "Failed to save the recipe.");
+                } catch (parseError) {
+                    console.error(responseText);
+                    alert("Server error occurred. Check the Console (F12)!");
+                }
+            }
+        } catch (error) {
+            console.error("Hálózati hiba:", error);
+            alert("Network error occurred!");
+        }
+    });
+}
+  
 });

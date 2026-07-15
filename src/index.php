@@ -4,6 +4,7 @@ declare(strict_types=1);
 session_start();
 require 'db.php';
 
+
 $method = $_SERVER['REQUEST_METHOD'];
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
@@ -46,9 +47,37 @@ if (strpos($path, '/api/') === 0) {
             echo json_encode(["error" => "Unauthorized"]);
             exit;
         }
-        echo json_encode(["message" => "Recipe creation API ready"]);
+
+        $title = $_POST['title'] ?? '';
+        $instructions = $_POST['instructions'] ?? '';
+        $user_id = $_SESSION['user_id'];
+
+        if (empty($title) || empty($instructions)) {
+            http_response_code(400);
+            echo json_encode(["error" => "Title and instructions are required."]);
+            exit;
+        }
+
+        try {
+            $stmt = $pdo->prepare("INSERT INTO recipes (user_id, title, instructions) VALUES (?, ?, ?)");
+            $stmt->execute([$user_id, $title, $instructions]);
+            
+            echo json_encode(["message" => "Recipe saved successfully!"]);
+        } catch (\PDOException $e) {
+            http_response_code(500);
+            echo json_encode(["error" => "Database error occurred."]);
+        }
         exit;
     }
+}
+
+if ($path === '/create') {
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: /view/login.html');
+        exit;
+    }
+    include 'view/create_recipe.html';
+    exit;
 }
 
 if ($path === '/' || $path === '/index.php') {
