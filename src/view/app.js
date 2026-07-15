@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (response.ok) {
                     alert("Sikeres regisztráció! Most már beléphetsz.");
-                    window.location.href = '/frontend/login.html';
+                    window.location.href = '/view/login.html';
                 } else {
                     const result = await response.json();
                     alert("Hiba történt: " + (result.error || "Ismeretlen hiba a szerveren!"));
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (response.ok) {
                     alert("Sikeres regisztráció! Most már beléphetsz.");
-                    window.location.href = '/frontend/login.html';
+                    window.location.href = '/view/login.html';
                 }
             } catch (error) {
                 console.error("Hálózati hiba:", error);
