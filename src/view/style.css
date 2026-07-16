@@ -53,44 +53,51 @@ button:hover {
     background-color: #7f8c8d;
 }
 
-/* Láthatóság kapcsoló (A legfontosabb SPA elem) */
 .hidden {
     display: none !important;
 }
 
-/* Fő tartalom konténere */
 main {
     max-width: 800px;
     margin: 2rem auto;
     padding: 0 1rem;
 }
 
-/* Szekciók (Kártyás dizájn az űrlapoknak) */
 .view-section {
     background: white;
-    padding: 2rem;
+    padding: 2.5rem;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .view-section h2 {
     margin-top: 0;
     border-bottom: 2px solid #eee;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.8rem;
+    margin-bottom: 1.5rem;
     color: #2c3e50;
+    text-align: center;
 }
 
-/* Űrlapok formázása */
 form {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    max-width: 400px;
-    margin: 0 auto;
+    gap: 1.2rem;
+    width: 100%;
 }
 
-#create-recipe-form {
-    max-width: 100%;
+form div {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: #2c3e50;
+    font-size: 0.95rem;
 }
 
 input, textarea {
@@ -99,6 +106,7 @@ input, textarea {
     border-radius: 4px;
     font-size: 1rem;
     width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 input:focus, textarea:focus {
@@ -150,4 +158,17 @@ textarea {
 .login-link {
     text-align: center;
     margin-top: 20px;
+    font-size: 0.95rem;
+}
+
+.login-link a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.login-link a:hover {
+    color: #2980b9;
+    text-decoration: underline;
 }
