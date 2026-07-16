@@ -24,10 +24,10 @@ if (strpos($path, '/api/') === 0) {
             $stmt = $pdo->prepare("INSERT INTO users (username, first_name, last_name, email, password_hash) VALUES (?, ?, ?, ?, ?)");
             $stmt->execute([$username, $first_name, $last_name, $email, $password_hash]);
             
-            echo json_encode(["message" => "Sikeres regisztráció!"]);
+            echo json_encode(["message" => "Registration successful!"]);
         } catch (\PDOException $e) {
             http_response_code(400);
-            echo json_encode(["error" => "A felhasználónév vagy az e-mail cím már foglalt!"]);
+            echo json_encode(["error" => "Username or email already in use!"]);
         }
         exit;
     }
@@ -61,52 +61,65 @@ if (strpos($path, '/api/') === 0) {
         echo json_encode(["message" => "Logged out"]);
         exit;
     }
+    elseif ($path === '/api/check-auth' && $method === 'GET') {
+        if (!isset($_SESSION['user_id'])) {
+            http_response_code(401);
+            echo json_encode(["error" => "You are not logged in!"]);
+        } else {
+            echo json_encode(["message" => "Everything works!"]);
+        }
+        exit;
+    }
     elseif ($path === '/api/recipes' && $method === 'POST') {
         if (!isset($_SESSION['user_id'])) {
             http_response_code(401);
-            echo json_encode(["error" => "Unauthorized"]);
+            echo json_encode(["error" => "You are not logged in!"]);
             exit;
         }
 
         $title = $_POST['title'] ?? '';
+        $ingredients = $_POST['ingredients'] ?? '';
         $instructions = $_POST['instructions'] ?? '';
         $user_id = $_SESSION['user_id'];
 
-        if (empty($title) || empty($instructions)) {
+        if (empty($title) || empty($ingredients) || empty($instructions)) {
             http_response_code(400);
-            echo json_encode(["error" => "Title and instructions are required."]);
+            echo json_encode(["error" => "You have to fill everything!"]);
             exit;
         }
 
         try {
-            $stmt = $pdo->prepare("INSERT INTO recipes (user_id, title, instructions) VALUES (?, ?, ?)");
-            $stmt->execute([$user_id, $title, $instructions]);
-            
-            echo json_encode(["message" => "Recipe saved successfully!"]);
+            $stmt = $pdo->prepare("INSERT INTO recipes (user_id, title, ingredients, instructions) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$user_id, $title, $ingredients, $instructions]);
+            echo json_encode(["message" => "Recipe saved!"]);
         } catch (\PDOException $e) {
             http_response_code(500);
-            echo json_encode(["error" => "Database error occurred."]);
+            echo json_encode(["error" => "Error during saving: " . $e->getMessage()]);
         }
         exit;
     }
-}
+    elseif ($path === '/api/recipes' && $method === 'GET') {
+        if (!isset($_SESSION['user_id'])) {
+            http_response_code(401);
+            echo json_encode(["error" => "You are not logged in!"]);
+            exit;
+        }
 
-if ($path === '/create') {
-    if (!isset($_SESSION['user_id'])) {
-        header('Location: /view/login.html');
+        try {
+            $stmt = $pdo->query("
+                SELECT r.id, r.title, r.ingredients, r.instructions, r.created_at, u.username 
+                FROM recipes r 
+                JOIN users u ON r.user_id = u.id 
+                ORDER BY r.created_at DESC
+            ");
+            $recipes = $stmt->fetchAll();   
+            echo json_encode($recipes);
+        } catch (\PDOException $e) {
+            http_response_code(500);
+            echo json_encode(["error" => "Error during loading."]);
+        }
         exit;
     }
-    include 'view/create_recipe.html';
-    exit;
-}
-
-if ($path === '/' || $path === '/index.php') {
-    if (!isset($_SESSION['user_id'])) {
-        header('Location: /view/login.html');
-        exit;
-    }
-    include 'view/index.html';
-    exit;
 }
 
 http_response_code(404);
