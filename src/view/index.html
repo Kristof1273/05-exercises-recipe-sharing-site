@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Best Recipe App - Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>Best Recipe App</h1>
+    <nav>
+        <button id="logoutBtn" class="btn-secondary">Log out</button>
+    </nav>
+</header>
+
+<main>
+    <div style="display: flex; gap: 10px; margin-bottom: 2rem; justify-content: center;">
+        <button id="showRecipesListBtn">All Recipes</button>
+        <button id="showAddRecipeBtn">Add new recipe</button>
+    </div>
+
+    <section id="recipes-list-section" class="view-section">
+        <div class="recipes-header">
+            <h2>Recipes in the database</h2>
+        </div>
+        <div id="recipes-container">
+            <p>No recipes in the database so far. Add one!</p>
+        </div>
+    </section>
+
+    <section id="add-recipe-section" class="view-section hidden">
+        <h2>Add new recipe</h2>
+        <form id="create-recipe-form">
+            <div>
+                <label for="title">Name</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            
+            <div>
+                <label for="ingredients">Ingredients list</label>
+                <textarea id="ingredients" name="ingredients" required></textarea>
+            </div>
+
+            <div>
+                <label for="instructions">Instructions</label>
+                <textarea id="instructions" name="instructions" required></textarea>
+            </div>
+
+            <button type="submit" id="saveRecipeBtn">Save recipe</button>
+        </form>
+    </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
