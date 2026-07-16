@@ -33,9 +33,29 @@ if (strpos($path, '/api/') === 0) {
     }
     
     elseif ($path === '/api/login' && $method === 'POST') {
-        echo json_encode(["message" => "Login API ready", "success" => true]); // A success true csak teszt miatt kell
+        $username = $_POST['username'] ?? '';
+        $password = $_POST['password'] ?? '';
+
+        try {
+            $stmt = $pdo->prepare("SELECT id, password_hash FROM users WHERE username = ?");
+            $stmt->execute([$username]);
+            $user = $stmt->fetch();
+
+            if ($user && password_verify($password, $user['password_hash'])) {
+                $_SESSION['user_id'] = $user['id'];
+                
+                echo json_encode(["message" => "You are logged in!"]);
+            } else {
+                http_response_code(401);
+                echo json_encode(["error" => "Incorrect username or password!"]);
+            }
+        } catch (\PDOException $e) {
+            http_response_code(500);
+            echo json_encode(["error" => "Error during login."]);
+        }
         exit;
     }
+
     elseif ($path === '/api/logout' && $method === 'POST') {
         session_destroy();
         echo json_encode(["message" => "Logged out"]);

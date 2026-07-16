@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    const loginForm = document.getElementById('login-form');
+const loginForm = document.getElementById('login-form');
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -11,17 +11,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     method: 'POST',
                     body: formData
                 });
-                const result = await response.json();
                 
                 if (response.ok) {
-                    alert("Sikeres regisztráció! Most már beléphetsz.");
-                    window.location.href = '/view/login.html';
+                    alert("Sikeres belépés!");
+                    window.location.href = '/view/index.html'; 
                 } else {
                     const result = await response.json();
                     alert("Hiba történt: " + (result.error || "Ismeretlen hiba a szerveren!"));
                 }
             } catch (error) {
                 console.error("Hálózati hiba:", error);
+                alert("Hálózati hiba történt. Kérlek, ellenőrizd az internetkapcsolatod!");
             }
         });
     }
